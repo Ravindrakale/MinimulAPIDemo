@@ -1,4 +1,5 @@
-﻿using Carter;
+﻿using AutoMapper;
+using Carter;
 using Microsoft.EntityFrameworkCore;
 using TangyAPI.Data;
 using TangyAPI.DTOs;
@@ -40,10 +41,10 @@ namespace TangyAPI.Endpoints
             return Results.Ok(category);
         }
 
-        public async Task<IResult> CreateCategoryAsync(CategoryDto category, ApplicationDbContext dbContext)
+        public async Task<IResult> CreateCategoryAsync(CategoryDto category, ApplicationDbContext dbContext, IMapper mapper)
         {
-            var count = await dbContext.Categories.CountAsync();
-            var categoryObj = new Category { Id = count + 1, Name = category.Name, AddedOn = DateTime.UtcNow };
+            var categoryObj = mapper.Map<Category>(category);
+            categoryObj.AddedOn = DateTime.UtcNow;
             _ = await dbContext.Categories.AddAsync(categoryObj);
             _ = await dbContext.SaveChangesAsync();
             return Results.Created($"api/categories/{categoryObj.Id}", categoryObj);

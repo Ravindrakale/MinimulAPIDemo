@@ -3,6 +3,8 @@ using Carter;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using TangyAPI.Data;
+using TangyAPI.DTOs;
+using TangyAPI.Models;
 
 namespace TangyAPI
 {
@@ -19,6 +21,10 @@ namespace TangyAPI
             builder.Services.AddValidation();
             builder.Services.AddProblemDetails();
 
+            builder.Services.AddAutoMapper(config =>
+            {
+                config.CreateMap<Category, CategoryDto>().ReverseMap();
+            });
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
